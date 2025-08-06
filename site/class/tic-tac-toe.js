@@ -52,6 +52,10 @@ export class TicTacToe {
     _choosePlayer(player) {
         this.#player = player;
 
+        if (player == true) {
+            this._computeNextMove();
+        }
+
         this._updateGrid();
     }
 
@@ -95,6 +99,14 @@ export class TicTacToe {
             return;
         }
 
+        this._computeNextMove();
+
+        if (this._checkWinner()) {
+            return;
+        }
+    }
+
+    _computeNextMove() {
         console.log("old grid = ", this.#grid.flat());
 
         const newGrid = wasm.compute_next_move(this.#grid.flat(), !this.#player);
@@ -108,10 +120,6 @@ export class TicTacToe {
         }
 
         this._updateGrid();
-
-        if (this._checkWinner()) {
-            return;
-        }
     }
 
     _checkWinner() {
@@ -141,6 +149,18 @@ export class TicTacToe {
                     this._displayWinner(col[0]);
                     return true;
                 }
+            }
+
+            let found0 = false;
+
+            this.#grid.forEach(e => {
+                if (e.includes(0)) {
+                    found0 = true;
+                }
+            });
+
+            if (!found0) {
+                return true;
             }
         }
 
